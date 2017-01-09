@@ -1,0 +1,13 @@
+[package]
+name = "hsh"
+version = "0.1.0"
+authors = ["Jerome Froelich <jeromefroelich@hotmail.com>"]
+description = "A crate providing various hash function implementations"
+homepage = "https://github.com/jeromefroe/hsh-rs"
+repository = "https://github.com/jeromefroe/hsh-rs.git"
+documentation = "https://docs.rs/hsh/"
+readme = "README.md"
+license = "MIT"
+keywords = ["hash", "fnv"]
+
+[dependencies]
