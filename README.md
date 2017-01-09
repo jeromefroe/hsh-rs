@@ -19,10 +19,10 @@ use std::hash::Hasher;
 use hsh::fnv::FnvHasher;
 
 fn main() {
-let mut fnv = FnvHasher::new();
-fnv.write(b"foo");
-let hash = fnv.finish();
+  let mut fnv = FnvHasher::new();
+  fnv.write(b"foo");
+  let hash = fnv.finish();
 
-println!("The fnv hash of 'foo' is {}", hash);
+  println!("The fnv hash of 'foo' is {}", hash);
 }
 ```
