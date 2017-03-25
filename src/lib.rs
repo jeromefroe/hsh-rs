@@ -20,4 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+/// `fnv` provides an implementation of the
+/// [Fowler–Noll–Vo hash algorthim](http://isthe.com/chongo/tech/comp/fnv/).
 pub mod fnv;
