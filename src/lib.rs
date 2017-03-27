@@ -19,7 +19,16 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+extern crate byteorder;
 
-/// `fnv` provides an implementation of the
+/// `Fnv` provides an implementation of the 64 bit
 /// [Fowler–Noll–Vo hash algorthim](http://isthe.com/chongo/tech/comp/fnv/).
-pub mod fnv;
+pub use self::fnv::Fnv;
+
+/// `Murmur_hash3_x86_32` provides an implementation of the 32 bit
+/// version of the
+/// [Murmur3 hash function](https://github.com/aappleby/smhasher).
+pub use self::murmur::murmurhash3_x86_32;
+
+mod fnv;
+mod murmur;

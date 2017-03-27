@@ -20,12 +20,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-//! A 64 bit implementation of the [Fowler–Noll–Vo hash algorthim](http://isthe.com/chongo/tech/comp/fnv/),
-//! specifically the [FNV-1a alternate algorithm](http://isthe.com/chongo/tech/comp/fnv/#FNV-1a)
+//! FNV is a 64 bit implementation of the
+//! [Fowler–Noll–Vo hash algorthim](http://isthe.com/chongo/tech/comp/fnv/),
+//! specifically the
+//! [FNV-1a alternate algorithm](http://isthe.com/chongo/tech/comp/fnv/#FNV-1a).
 //!
-//! FNV is a non-cryptographic hash function that is designed to be fast while
-//! maintaining a low collision rate. FNV is best for applications that need
-//! to hash short keys and cannot be exposed to malicious input.
+//! FNV is a non-cryptographic hash function that is designed to be fast
+//! while maintaining a low collision rate. FNV is best for applications
+//! that need to hash short keys and cannot be exposed to malicious input.
+//! As noted in
+//! [Performance of the most common non-cryptographic hashfunctions](http://dl.acm.org/citation.cfm?id=2904542)
+//! however, it does not have as good of an avalance effect as newer non-cryptographic hash functions
+//! and it shows biases when used in hashmaps whose sizes are not prime.
 //!
 //! ## Example
 //!
@@ -33,10 +39,10 @@
 //! extern crate hsh;
 //!
 //! use std::hash::Hasher;
-//! use hsh::fnv::FnvHasher;
+//! use hsh::Fnv;
 //!
 //! fn main() {
-//!   let mut fnv = FnvHasher::new();
+//!   let mut fnv = Fnv::new();
 //!   fnv.write(b"foo");
 //!   let hash = fnv.finish();
 //!
@@ -52,38 +58,36 @@ const OFFSET_BASIS: u64 = 14695981039346656037;
 /// An implementation of the Fowler–Noll–Vo hash function, specifically
 /// the FNV-1a alternative algorithim.
 #[allow(missing_copy_implementations)]
-pub struct FnvHasher {
-    hash: u64,
-}
+pub struct Fnv(u64);
 
-impl FnvHasher {
-    /// Create a new FNV Hasher with the default initial state..
+impl Fnv {
+    /// Create a new FNV Hasher with the default initial state.
     pub fn new() -> Self {
-        FnvHasher { hash: OFFSET_BASIS }
+        Fnv(OFFSET_BASIS)
     }
 
     /// Create a new FNV Hasher whose inital state is `key`.
-    pub fn new_with_key(key: u64) -> FnvHasher {
-        FnvHasher { hash: key }
+    pub fn new_with_key(key: u64) -> Fnv {
+        Fnv(key)
     }
 }
 
-impl Default for FnvHasher {
+impl Default for Fnv {
     /// Create a default FNV Hasher.
-    fn default() -> FnvHasher {
-        FnvHasher::new()
+    fn default() -> Fnv {
+        Fnv::new()
     }
 }
 
-impl Hasher for FnvHasher {
+impl Hasher for Fnv {
     fn finish(&self) -> u64 {
-        self.hash
+        self.0
     }
 
     fn write(&mut self, bytes: &[u8]) {
         for byte in bytes.iter() {
-            self.hash = self.hash ^ (*byte as u64);
-            self.hash = self.hash.wrapping_mul(PRIME);
+            self.0 = self.0 ^ (*byte as u64);
+            self.0 = self.0.wrapping_mul(PRIME);
         }
     }
 }
@@ -91,17 +95,17 @@ impl Hasher for FnvHasher {
 #[cfg(test)]
 mod tests {
     use std::hash::Hasher;
-    use super::FnvHasher;
+    use super::Fnv;
 
     fn fnv1a(bytes: &[u8]) -> u64 {
-        let mut hasher = FnvHasher::new();
+        let mut hasher = Fnv::new();
         hasher.write(bytes);
         hasher.finish()
     }
 
     #[test]
     fn basic_tests() {
-        assert_eq!(fnv1a(b"foo"), 015902901984413996407);
+        assert_eq!(fnv1a(b"foo"), 15902901984413996407);
         assert_eq!(fnv1a(b"bar"), 16101355973854746);
         assert_eq!(fnv1a(b"baz"), 16092559880829058);
     }

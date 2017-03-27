@@ -11,3 +11,4 @@ license = "MIT"
 keywords = ["hash", "fnv"]
 
 [dependencies]
+byteorder = "1"
